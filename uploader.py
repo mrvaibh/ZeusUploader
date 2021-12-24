@@ -71,15 +71,16 @@ def upload_data():
 
     for row in rows:
         SQL_QUERY = f'SELECT `Badgenumber` FROM `userinfo` WHERE `userid`={row[0]};'
-        badge_num = cur.execute(SQL_QUERY).fetchall()
+        badge_num = cur.execute(SQL_QUERY).fetchone()
 
         export.append({
-            'Badgenumber': badge_num[0][0].zfill(5),
+            'Badgenumber': badge_num[0].zfill(5),
             'blank1': '',
             'Checktime': row[1].strftime("%d-%m-%Y %H:%M"),
             'blank2': '',
             'Sensorid': row[2]
         })
+    
     cur.close()
     con.close()
 
