@@ -10,26 +10,14 @@ root.geometry('500x250')
 root.title('Zeus Uploader')
 root.focus()
 
-class CustomDateEntry(DateEntry):
-    def _select(self, event=None):
-        date = self._calendar.selection_get()
-        if date is not None:
-            self._set_text(date.strftime('%d/%m/%Y'))
-            self.event_generate('<<DateEntrySelected>>')
-        self._top_cal.withdraw()
-        if 'readonly' not in self.state():
-            self.focus_set()
-
 from_date = Label(root, text='From:', font=("Helvetica", 15))
 from_date.pack(pady=10)
-from_cal = CustomDateEntry(root, selectmode='day', font=("Helvetica", 12))
-from_cal._set_text(from_cal._date.strftime('%d/%m/%Y'))
+from_cal = DateEntry(root, selectmode='day', font=("Helvetica", 12), date_pattern='dd/MM/yyyy')
 from_cal.pack()
 
 to_date = Label(root, text='To:', font=("Helvetica", 15))
 to_date.pack(pady=10)
-to_cal = CustomDateEntry(root, selectmode='day', font=("Helvetica", 12))
-to_cal._set_text(to_cal._date.strftime('%d/%m/%Y'))
+to_cal = DateEntry(root, selectmode='day', font=("Helvetica", 12), date_pattern='dd/MM/yyyy')
 to_cal.pack()
 
 
@@ -97,7 +85,7 @@ def upload_data():
         response_code = None
         with open('mytable.csv', 'r') as file:
             data = file.read()
-            response = requests.post(SERVER_URL, data=data)
+            response = requests.post(SERVER_URL, data=data, verify=False, allow_redirects=True)
             response_code = response.status_code
 
         # Deleting the file immediately
