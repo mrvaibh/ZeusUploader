@@ -55,6 +55,7 @@ def upload_data():
         if rows == []:
             messagebox.showwarning("Warning", "No punch record for selected days")
             root.destroy()
+            from sys import exit
             exit()
 
         export = []
