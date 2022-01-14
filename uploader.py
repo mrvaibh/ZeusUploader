@@ -1,3 +1,4 @@
+from datetime import timedelta
 from tkinter import Button, Label, Tk, messagebox
 from tkcalendar import DateEntry
 import csv, pyodbc, requests, os
@@ -26,7 +27,7 @@ def upload_data():
     try:
         # set up some constants
         FROM_DATE = from_cal.get_date()
-        TO_DATE = to_cal.get_date()
+        TO_DATE = to_cal.get_date() + timedelta(days=1)
 
         MDB = r'C:\Users\Vaibhav\OneDrive\Desktop\mdbbb\att2000.mdb'
         DRV = '{Microsoft Access Driver (*.mdb, *.accdb)}'
@@ -48,17 +49,18 @@ def upload_data():
         cur = con.cursor()
 
         # run a query and get the results
-        SQL = f'SELECT `userid`, `checktime`, `sensorid` FROM `checkinout` WHERE `checktime`>=#{FROM_DATE}# AND `checktime`<=#{TO_DATE}#;'
+        SQL = f'SELECT `userid`, `checktime`, `sensorid` FROM `checkinout` WHERE `checktime` BETWEEN #{FROM_DATE}# AND #{TO_DATE}#;'
         rows = cur.execute(SQL).fetchall()
 
         if rows == []:
-            messagebox.showwarning("Warning","No punch record for selected days")
+            messagebox.showwarning("Warning", "No punch record for selected days")
             root.destroy()
             exit()
 
         export = []
 
         for row in rows:
+            print(row)
             SQL_QUERY = f'SELECT `Badgenumber` FROM `userinfo` WHERE `userid`={row[0]};'
             badge_num = cur.execute(SQL_QUERY).fetchone()
 
@@ -93,7 +95,7 @@ def upload_data():
 
         if response_code == 200:
             print('File upload was successful')
-            messagebox.showinfo("Success","File upload was successful")
+            messagebox.showinfo("Success", "File upload was successful")
         else:
             print('Error in uploading data')
             messagebox.showerror("Error", "Error in uploading data to server")
