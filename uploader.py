@@ -43,7 +43,7 @@ def upload_data():
                 DRV = '{' + lines[1] + '}' # type ODBC in start menu
                 PWD = lines[2] # Password (if any)
                 SERVER_URL = lines[3] # server endpoint
-                ZFILL = int(lines[4])
+                ZFILL = int(lines[4]) # zero fill ID
 
 
         # connect to db
