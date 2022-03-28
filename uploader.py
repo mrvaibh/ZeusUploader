@@ -33,6 +33,7 @@ def upload_data():
         DRV = '{Microsoft Access Driver (*.mdb, *.accdb)}'
         PWD = 'pw'
         SERVER_URL = 'http://demo.zeustech.in:8082/webapi/checkInOut/file/upload'
+        ZFILL = 5
 
         if os.path.exists('config.zeus'):
             with open('config.zeus', 'r') as file:
@@ -42,6 +43,7 @@ def upload_data():
                 DRV = '{' + lines[1] + '}' # type ODBC in start menu
                 PWD = lines[2] # Password (if any)
                 SERVER_URL = lines[3] # server endpoint
+                ZFILL = int(lines[4])
 
 
         # connect to db
@@ -66,7 +68,7 @@ def upload_data():
             badge_num = cur.execute(SQL_QUERY).fetchone()
 
             export.append({
-                'Badgenumber': badge_num[0].zfill(5),
+                'Badgenumber': badge_num[0].zfill(ZFILL),
                 'blank1': '',
                 'Checktime': row[1].strftime("%d-%m-%Y %H:%M"),
                 'blank2': '',
